@@ -1,4 +1,3 @@
-
 import csv
 from operator import eq
 from urllib.request import urlopen
@@ -16,11 +15,13 @@ try:
     i = 0
     readFile = open('news.csv', 'r')
     rdr = csv.reader(readFile)
+
     for line in rdr:
         if i >= 20:
             break
         compareList.append(line[0])
         i += 1
+
     readFile.close()
 except:
     print("파일 없음")
@@ -29,20 +30,12 @@ except:
 csvFile = open("news.csv", 'a')
 writer = csv.writer(csvFile)
 
-
-#print(rows)
-
 try:
     for temp in rows:
         row = temp.findAll(['dt', 'dd'])
 
-        title = ""
-        media = ""
-        date = ""
-
         if len(row) == 3:
             title = row[1].get_text(" ", strip=True)
-
         else:
             title = row[0].get_text(" ", strip=True)
 
