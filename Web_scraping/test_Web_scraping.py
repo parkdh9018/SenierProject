@@ -1,62 +1,3 @@
-"""
-import csv
-from operator import eq
-from urllib.request import urlopen
-from bs4 import BeautifulSoup
-
-html = urlopen("http://news.naver.com/main/list.nhn?mode=LSD&mid=sec&sid1=001")
-bsObj = BeautifulSoup(html, "html.parser")
-
-table = bsObj.findAll("div", {"class":"list_body newsflash_body"})[0]
-rows = table.findAll("li")
-
-compareList = []
-
-try:
-    i = 0
-    csvFile = open('news.csv', 'r')
-    rdr = csv.reader(csvFile)
-
-    for line in rdr:
-        if i >= 20:
-            break
-        compareList.append(line[0])
-        i += 1
-
-    csvFile.close()
-except:
-    csvFile = open('news.csv', 'w')
-    writer = csv.writer(csvFile)
-    writer.writerow(('Title', 'Media', 'Date'))
-    csvFile.close()
-
-
-csvFile = open("news.csv", 'a')
-writer = csv.writer(csvFile)
-
-
-try:
-    for temp in rows:
-        row = temp.findAll(['dt', 'dd'])
-
-        if len(row) == 3:
-            title = row[1].get_text(" ", strip=True)
-        else:
-            title = row[0].get_text(" ", strip=True)
-
-        media = temp.find( "span", {"class": "writing"} ).get_text()
-        date = temp.find( "span", {"class": "date"} ).get_text()
-
-        for item in compareList:
-            if not eq(item, title):
-                writer.writerow((title, media, date))
-                break
-finally:
-    csvFile.close()
-"""
-
-
-# 스레드만 추가, 성능개선 필요
 import threading
 import copy
 import csv
@@ -70,7 +11,7 @@ class AsyncTask:
         try:
             csvFile = open('news.csv', 'r', encoding='utf-8')
             csvFile.close()
-        except:
+        except:                                                 # 파일이 없으면
             csvFile = open('news.csv', 'w', encoding='utf-8')
             writer = csv.writer(csvFile)
             writer.writerow(('Title', 'Media', 'Date'))
@@ -81,6 +22,7 @@ class AsyncTask:
     def TaskA(self):
         global compareList
         tempList = []
+        setList = set([])
 
         html = urlopen("http://news.naver.com/main/list.nhn?mode=LSD&mid=sec&sid1=001")
         bsObj = BeautifulSoup(html, "html.parser")
@@ -106,29 +48,30 @@ class AsyncTask:
                 tempList.append(title)
 
                 if compareList.count(title) == 0:
-                    writer.writerow((title, media, date))
+                    setList.add((title, media, date))
+
+            resultList = list(setList)
+
+            for item in resultList:
+                writer.writerow(item)
+
             print("scraping")
 
-            print("compareList")
-            print(compareList)
-            print("tempList")
-            print(tempList)
-
-            compareList.clear()
-            compareList = copy.deepcopy(tempList)
+            compareList.clear()                     # 다음 비교를 위해 리스트 초기화
+            compareList = copy.deepcopy(tempList)   # 현재 시점의 데이터들을 다음 비교를 위해 복사
 
         except:
             print("예외발생")
-        finally:
+        finally:                                # 예외발생 유무 상관 없이 실행
             csvFile.close()
 
-        threading.Timer(10,self.TaskA).start()
+        threading.Timer(5,self.TaskA).start()  # 10초 마다 TaskA 함수 실행
 
 
+# 일정 시간마다 특정 함수 실행
 def main():
     at = AsyncTask()
     at.TaskA()
 
 if __name__ == '__main__':
     main()
-
