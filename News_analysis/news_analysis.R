@@ -5,7 +5,8 @@ library("RColorBrewer")
 useSejongDic()  # 사전등록
 
 DF <- read.csv('/Users/Enirobot/SenierProject/Web_scraping/news.csv', stringsAsFactors = FALSE)
-data <- sapply(DF["title"], extractNoun, USE.NAMES = F)              # 명사
+
+data <- sapply(unique(DF["Title"]), extractNoun, USE.NAMES = F)              # 명사
 
 data_unlist <- unlist(data)                                          # 리스트 -> 벡터로 바꿈
 
