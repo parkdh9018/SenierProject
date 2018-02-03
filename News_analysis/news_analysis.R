@@ -42,10 +42,10 @@ palete <- brewer.pal(8, "Dark2")                                    # 색상 설
 
 wordcloud(names(wordcount_top),             # 단어
           freq = wordcount_top,             # 빈도수
-          scale = c(2, 0.1),                # 단어의 크기
+          scale = c(4, 0.5),                # 단어의 크기
           rot.per = 0.1,                    # 90도 회전시킨 단어 비율
           min.freq = 1,                     # 최소 단어 빈도
-          random.order = F                  # 고빈도 단어 중앙에 배치
+          random.order = F,                  # 고빈도 단어 중앙에 배치
           colors = palete,                  # 색상 목록
           family="AppleGothic")             # family="AppleGothic" : 폰트 지정
 
