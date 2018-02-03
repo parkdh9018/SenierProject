@@ -25,7 +25,7 @@ class AsyncTask:
         setList = set([])
 
         html = urlopen("http://news.naver.com/main/list.nhn?mode=LSD&mid=sec&sid1=001")
-        bsObj = BeautifulSoup(html, "html.parser")
+        bsObj = BeautifulSoup(html, 'lxml', from_encoding='utf-8')
 
         table = bsObj.findAll("div", {"class": "list_body newsflash_body"})[0]
         rows = table.findAll("li")
@@ -38,7 +38,7 @@ class AsyncTask:
                 row = temp.findAll(['dt', 'dd'])
 
                 if len(row) == 3:
-                    title = row[1].get_text(" ", strip=True)
+                    title = row[1].get_text(" ", strip=True)        # strip=True : 좌우 공백 제거
                 else:
                     title = row[0].get_text(" ", strip=True)
 
@@ -48,6 +48,7 @@ class AsyncTask:
                 tempList.append(title)
 
                 if compareList.count(title) == 0:
+                    #set의 특성을 사용하여 데이터 중복 제거 단 데이터의 순서는 지켜지지 않음
                     setList.add((title, media, date))
 
             resultList = list(setList)
@@ -65,7 +66,7 @@ class AsyncTask:
         finally:                                # 예외발생 유무 상관 없이 실행
             csvFile.close()
 
-        threading.Timer(5,self.TaskA).start()  # 10초 마다 TaskA 함수 실행
+        threading.Timer(5,self.TaskA).start()  # 5초 마다 TaskA 함수 실행
 
 
 # 일정 시간마다 특정 함수 실행
