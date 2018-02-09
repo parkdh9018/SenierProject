@@ -22,21 +22,24 @@ import com.mongo.board.News;
  * Handles requests for the application home page.
  */
 @Controller
-
+//MVC 중 Controller에 해당
 
 public class findController {
+	
+	//collection내의 모든 document를 출력
 	@RequestMapping("findAll")
 	public ModelAndView FindAll(){
 		MongoDAO mongoDAO = new MongoDAO();
 		List<News> list = mongoDAO.findAll();
 	
-		
+		//ModelAnView 메서드를 이용하여 Model에 list를 넘겨준다.
 		ModelAndView view = new ModelAndView("list");
 		view.getModelMap().addAttribute("list",list);
 		
 		return view;
 	}
-
+	
+	//조건에 맞는 모든 document를 출력
 	@RequestMapping("find")
 	public ModelAndView Find(HttpServletRequest request) throws Exception {
 		MongoDAO mongoDAO = new MongoDAO();
