@@ -41,7 +41,14 @@ public class MongoDAO {
 		return list;
 	}
 	
-    //
+	//조건에 맞는 document를 검색하고 삭제하는 기능
+	public void findAndRemove(String id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("id").is(id));
+		mongoOps.findAndRemove(query, News.class);
+	}	
+	
+    //미구현
     public void update(News news) {
     	mongoOps.save(news);
     }
