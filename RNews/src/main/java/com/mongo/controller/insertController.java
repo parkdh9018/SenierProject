@@ -16,13 +16,16 @@ import com.mongo.board.News;
  * Handles requests for the application home page.
  */
 @Controller
-
+//MVC 중 controller에 해당
 
 public class insertController {
+	
+	//insert라는 이름을 가진 요청을 받게 되면 동작
+	//annotation을 이용하여 web.xml에 별도의 servlet 등록이 필요없다.
 	@RequestMapping("insert")
 	public String Insert(HttpServletRequest request) throws Exception {
 		String page = "home";
-		
+		//한글깨짐으로 인한 인코딩
 		request.setCharacterEncoding("UTF-8");
 		String title = request.getParameter("title");
 		String company = request.getParameter("company");
