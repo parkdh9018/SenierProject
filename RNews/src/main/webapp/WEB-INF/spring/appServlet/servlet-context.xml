@@ -21,6 +21,7 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+	<!--annotation-->
 	<context:component-scan base-package="com.spring.RNews" />
 	<context:component-scan base-package="com.mongo.controller" />
 	
