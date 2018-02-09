@@ -6,6 +6,8 @@ public class News {
 	
 	@Id
 	private String id;
+	//raw의 아이디가 저장되는 변수
+	//annotation을 사용하여 별도로 지정해주지 않아도 자동으로 입력이 됨
 	
 	private String title;
 	private String company;
